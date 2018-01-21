@@ -78,7 +78,7 @@ apk del --purge   .build-dependencies && \
 rm -rf /var/cache/apk/*
 
 WORKDIR /usr/share
-RUN git clone git://github.com/mdhiggins/sickbeard_mp4_automator.git mp4_automator && \
+RUN git clone -b master --single-branch git://github.com/brunnels/sickbeard_mp4_automator.git mp4_automator && \
 wget https://bootstrap.pypa.io/ez_setup.py -O - | python && \
 rm -rf setuptools-33.1.1.zip && \
 pip install requests && \
@@ -92,37 +92,9 @@ pip install qtfaststart && \
 pip install requests[security]
 
 COPY autoProcess.ini /usr/share/mp4_automator/autoProcess.ini
+COPY processFolder.sh /usr/share/mp4_automator/processFolder.sh
+COPY _lib_jobs.sh /usr/share/_lib_jobs.sh
 
 CMD ["/bin/bash"]
 
-#ENTRYPOINT ["/usr/local/mp4_automator/manual.py"]
-
-
-
-
-#  apt-get install ffmpeg git python-pip python-dev libfdk-aac-dev -y
-#  pip install --upgrade pip
-#  pip install requests requests[security] requests-cache babelfish 'guessit<2' 'subliminal<2' stevedore==1.19.1 python-dateutil qtfaststart
-#  git clone git://github.com/mdhiggins/sickbeard_mp4_automator.git /config/sickbeard_mp4_automator/
-#  touch /config/sickbeard_mp4_automator/info.log
-#  chmod a+rwx -R /config/sickbeard_mp4_automator
-#  ln -s /downloads /data
-#  rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/*
-
-# https://github.com/milleruk/docker-sonarr-mp4/blob/master/Dockerfile
-
-
-#WORKDIR /work
-
-### MP4 Automator
-#RUN git clone git://github.com/mdhiggins/sickbeard_mp4_automator.git mp4_automator
-#COPY autoProcess.ini /work/mp4_automator/autoProcess.ini
-
-## Install Configs
-#RUN mkdir -p /var/log/supervisor
-#COPY supervisord.conf /work/supervisord.conf
-
-VOLUME ["/config", "/storage", "/incoming"]
-
-#CMD [ "-c", "/work/supervisord.conf"]
-#ENTRYPOINT ["/usr/bin/supervisord"]
+VOLUME ["/config", "/outgoing", "/incoming"]
